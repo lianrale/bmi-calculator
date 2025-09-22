@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kalkulator BMI — Sehat Bareng</title>
+  <style>
+    :root{--bg:#f7fbff;--card:#ffffff;--accent:#0073e6}
+    body{font-family:Inter,Arial,sans-serif;background:var(--bg);margin:0;padding:20px;display:flex;align-items:center;justify-content:center;min-height:100vh}
+    .card{background:var(--card);padding:24px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.08);max-width:420px;width:100%;text-align:center}
+    input{width:calc(50% - 12px);padding:10px;margin:6px;border:1px solid #e1e7ef;border-radius:8px}
+    button{background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:8px;margin-top:8px;cursor:pointer}
+    p.result{margin-top:12px;font-weight:600}
+    small{color:#666}
+    @media(max-width:420px){input{width:100%;display:block}}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Kalkulator BMI</h2>
+    <p>Isi berat (kg) dan tinggi (cm), lalu klik Hitung.</p>
+
+    <div>
+      <input type="number" id="berat" placeholder="Berat (kg)" />
+      <input type="number" id="tinggi" placeholder="Tinggi (cm)" />
+    </div>
+    <div>
+      <button onclick="hitungBMI()">Hitung BMI</button>
+    </div>
+
+    <p class="result" id="hasil"></p>
+    <small>Bagus buat edukasi singkat — bukan pengganti saran medis profesional.</small>
+  </div>
+
+  <script>
+    function hitungBMI(){
+      const b = parseFloat(document.getElementById('berat').value);
+      const tcm = parseFloat(document.getElementById('tinggi').value);
+      const out = document.getElementById('hasil');
+
+      if (!b || !tcm) {
+        out.innerText = "Isi berat dan tinggi dulu ya 😉";
+        return;
+      }
+      const t = tcm/100;
+      const bmi = b / (t*t);
+      let kategori = '';
+      if (bmi < 18.5) kategori = 'Kurus';
+      else if (bmi < 24.9) kategori = 'Normal';
+      else if (bmi < 29.9) kategori = 'Berlebih';
+      else kategori = 'Obesitas';
+
+      out.innerText = `BMI: ${bmi.toFixed(2)} — ${kategori}`;
+    }
+  </script>
+</body>
+</html>
