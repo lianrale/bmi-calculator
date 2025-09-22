@@ -1,56 +1,145 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Kalkulator BMI — Sehat Bareng</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulator BMI Interaktif</title>
   <style>
-    :root{--bg:#f7fbff;--card:#ffffff;--accent:#0073e6}
-    body{font-family:Inter,Arial,sans-serif;background:var(--bg);margin:0;padding:20px;display:flex;align-items:center;justify-content:center;min-height:100vh}
-    .card{background:var(--card);padding:24px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.08);max-width:420px;width:100%;text-align:center}
-    input{width:calc(50% - 12px);padding:10px;margin:6px;border:1px solid #e1e7ef;border-radius:8px}
-    button{background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:8px;margin-top:8px;cursor:pointer}
-    p.result{margin-top:12px;font-weight:600}
-    small{color:#666}
-    @media(max-width:420px){input{width:100%;display:block}}
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #74ebd5, #9face6);
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: #fff;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+    h1 {
+      color: #4e54c8;
+      margin-bottom: 10px;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+    button {
+      background: #4e54c8;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #3b3fc1;
+    }
+    .result {
+      margin-top: 15px;
+      padding: 15px;
+      background: #f5f7ff;
+      border-radius: 12px;
+      font-weight: bold;
+    }
+    .advice {
+      margin-top: 20px;
+      text-align: left;
+    }
+    .card {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 12px;
+      margin: 10px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card span {
+      font-size: 24px;
+    }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h2>Kalkulator BMI</h2>
-    <p>Isi berat (kg) dan tinggi (cm), lalu klik Hitung.</p>
+  <div class="container">
+    <h1>⚖️ Kalkulator BMI</h1>
+    <p>Hitung indeks massa tubuhmu dan dapatkan saran!</p>
 
-    <div>
-      <input type="number" id="berat" placeholder="Berat (kg)" />
-      <input type="number" id="tinggi" placeholder="Tinggi (cm)" />
-    </div>
-    <div>
-      <button onclick="hitungBMI()">Hitung BMI</button>
-    </div>
+    <input type="number" id="berat" placeholder="Berat badan (kg)">
+    <input type="number" id="tinggi" placeholder="Tinggi badan (cm)">
+    <button onclick="hitungBMI()">Hitung BMI</button>
 
-    <p class="result" id="hasil"></p>
-    <small>Bagus buat edukasi singkat — bukan pengganti saran medis profesional.</small>
+    <div id="output" class="result"></div>
+    <div id="saran" class="advice"></div>
   </div>
 
   <script>
-    function hitungBMI(){
-      const b = parseFloat(document.getElementById('berat').value);
-      const tcm = parseFloat(document.getElementById('tinggi').value);
-      const out = document.getElementById('hasil');
+    function hitungBMI() {
+      let berat = parseFloat(document.getElementById("berat").value);
+      let tinggi = parseFloat(document.getElementById("tinggi").value) / 100;
 
-      if (!b || !tcm) {
-        out.innerText = "Isi berat dan tinggi dulu ya 😉";
+      if (isNaN(berat) || isNaN(tinggi) || tinggi <= 0) {
+        document.getElementById("output").innerHTML = "⚠️ Masukkan data dengan benar!";
+        document.getElementById("saran").innerHTML = "";
         return;
       }
-      const t = tcm/100;
-      const bmi = b / (t*t);
-      let kategori = '';
-      if (bmi < 18.5) kategori = 'Kurus';
-      else if (bmi < 24.9) kategori = 'Normal';
-      else if (bmi < 29.9) kategori = 'Berlebih';
-      else kategori = 'Obesitas';
 
-      out.innerText = `BMI: ${bmi.toFixed(2)} — ${kategori}`;
+      let bmi = (berat / (tinggi * tinggi)).toFixed(1);
+      let kategori = "";
+      let saran = "";
+
+      if (bmi < 18.5) {
+        kategori = "Kurus";
+        saran = `
+          <div class="card"><span>🍚</span> Tambah asupan karbohidrat kompleks (nasi merah, roti gandum).</div>
+          <div class="card"><span>🥩</span> Konsumsi protein tinggi (ikan, ayam, telur, tahu, tempe).</div>
+          <div class="card"><span>🏋️</span> Lakukan latihan beban ringan untuk menambah massa otot.</div>
+        `;
+      } else if (bmi >= 18.5 && bmi < 24.9) {
+        kategori = "Normal";
+        saran = `
+          <div class="card"><span>🥗</span> Pertahankan pola makan seimbang dengan sayur & buah.</div>
+          <div class="card"><span>🚶</span> Tetap aktif dengan olahraga 30 menit sehari.</div>
+          <div class="card"><span>💧</span> Jangan lupa minum cukup air putih.</div>
+        `;
+      } else if (bmi >= 25 && bmi < 29.9) {
+        kategori = "Overweight";
+        saran = `
+          <div class="card"><span>🥦</span> Kurangi makanan berlemak, perbanyak sayuran hijau.</div>
+          <div class="card"><span>🏃</span> Rutin jogging atau bersepeda 3–4 kali seminggu.</div>
+          <div class="card"><span>🛌</span> Tidur cukup agar metabolisme tetap sehat.</div>
+        `;
+      } else {
+        kategori = "Obesitas";
+        saran = `
+          <div class="card"><span>🥒</span> Terapkan diet rendah kalori dengan pengawasan ahli gizi.</div>
+          <div class="card"><span>🏊</span> Coba olahraga low impact (renang, jalan kaki).</div>
+          <div class="card"><span>🩺</span> Konsultasikan ke dokter untuk pemantauan kesehatan.</div>
+        `;
+      }
+
+      document.getElementById("output").innerHTML = `BMI kamu: <b>${bmi}</b> (${kategori})`;
+      document.getElementById("saran").innerHTML = `<h3>Rekomendasi:</h3>${saran}`;
     }
   </script>
 </body>
